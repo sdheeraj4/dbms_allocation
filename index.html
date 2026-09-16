@@ -1,0 +1,1849 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#163b66">
+
+  <title>DBMS Topic Allocation</title>
+
+  <style>
+    :root {
+      --ink: #142d48;
+      --muted: #526579;
+      --blue: #195ac8;
+      --navy: #163b66;
+      --line: #dce4ee;
+      --background: #f3f6fb;
+      --green: #116746;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--background);
+      color: var(--ink);
+      font: 16px/1.55 system-ui, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", sans-serif;
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    button,
+    input,
+    select,
+    a {
+      touch-action: manipulation;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    button:disabled {
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+
+    button:focus-visible,
+    input:focus-visible,
+    select:focus-visible,
+    a:focus-visible,
+    summary:focus-visible {
+      outline: 3px solid #e8a621;
+      outline-offset: 3px;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 22px max(24px, calc((100vw - 1200px) / 2));
+      background: var(--navy);
+      color: white;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .mark {
+      display: grid;
+      place-items: center;
+      width: 43px;
+      height: 43px;
+      border: 1px solid #8ba4c2;
+      border-radius: 12px;
+      font-size: 18px;
+      font-weight: 750;
+    }
+
+    .brand strong {
+      font-size: 19px;
+    }
+
+    .brand small {
+      display: block;
+      color: #d7e3f2;
+      font-size: 14px;
+    }
+
+    .top-meta {
+      color: #d7e3f2;
+      font-size: 14px;
+    }
+
+    main {
+      max-width: 1248px;
+      margin: auto;
+      padding: 32px 24px 60px;
+    }
+
+    h1 {
+      margin: 0 0 12px;
+      font-size: clamp(28px, 4vw, 38px);
+      line-height: 1.2;
+      letter-spacing: -1px;
+    }
+
+    h2 {
+      margin: 0 0 12px;
+      font-size: 22px;
+      line-height: 1.3;
+    }
+
+    p {
+      margin: 0 0 14px;
+    }
+
+    .intro {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      margin: 26px 0;
+    }
+
+    .intro p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .tag {
+      padding: 6px 12px;
+      border-radius: 8px;
+      background: #e5edf8;
+      color: #214568;
+      font-size: 14px;
+      white-space: nowrap;
+    }
+
+    .banner {
+      margin-bottom: 20px;
+      padding: 13px 17px;
+      border: 1px solid #dcc69b;
+      border-radius: 10px;
+      background: #fff6e7;
+      color: #6c480a;
+      font-size: 14px;
+    }
+
+    .banner.error {
+      border-color: #eabbbb;
+      background: #fff0f0;
+      color: #8b2626;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 26px;
+    }
+
+    .stat {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      padding: 17px 20px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: white;
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 24px;
+    }
+
+    .stat span {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .stat .number {
+      color: var(--navy);
+      font-size: 30px;
+      font-weight: 750;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.65fr) minmax(280px, 1fr);
+      align-items: start;
+      gap: 24px;
+    }
+
+    .panel {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: white;
+    }
+
+    .panel-pad {
+      padding: 25px;
+    }
+
+    .step {
+      margin-bottom: 10px;
+      color: var(--blue);
+      font-size: 13px;
+      font-weight: 750;
+      letter-spacing: 1px;
+    }
+
+    .identity {
+      margin-bottom: 22px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    label {
+      display: block;
+      margin-bottom: 7px;
+      font-size: 14px;
+      font-weight: 650;
+    }
+
+    input,
+    select {
+      width: 100%;
+      min-height: 48px;
+      padding: 12px 13px;
+      border: 1px solid #b9c8d9;
+      border-radius: 9px;
+      background: white;
+      color: var(--ink);
+    }
+
+    input::placeholder {
+      color: #718297;
+    }
+
+    input[readonly] {
+      background: #f2f5f9;
+    }
+
+    .row {
+      display: flex;
+      gap: 10px;
+    }
+
+    .row input {
+      min-width: 0;
+    }
+
+    .btn {
+      min-height: 46px;
+      padding: 12px 18px;
+      border: 0;
+      border-radius: 9px;
+      background: var(--blue);
+      color: white;
+      font-weight: 650;
+    }
+
+    .btn.secondary {
+      background: #edf2f8;
+      color: var(--navy);
+    }
+
+    .hint {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 5px;
+      margin-bottom: 22px;
+      padding: 6px;
+      border-radius: 11px;
+      background: #eef3f9;
+    }
+
+    .tabs button {
+      flex: 1;
+      padding: 11px 8px;
+      border: 0;
+      border-radius: 8px;
+      background: transparent;
+      color: var(--muted);
+      font-weight: 650;
+    }
+
+    .tabs button[aria-selected="true"] {
+      background: white;
+      color: var(--navy);
+      box-shadow: 0 2px 5px #19365a16;
+    }
+
+    .status {
+      margin-bottom: 18px;
+      padding: 12px 14px;
+      border-radius: 9px;
+      background: #edf6ff;
+      font-size: 14px;
+      overflow-wrap: anywhere;
+    }
+
+    .status.warning {
+      background: #fff4df;
+      color: #795115;
+    }
+
+    .status.success {
+      background: #eaf6ef;
+      color: var(--green);
+    }
+
+    .field {
+      margin-top: 18px;
+    }
+
+    .members {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 15px;
+    }
+
+    .submit {
+      width: 100%;
+      margin-top: 22px;
+    }
+
+    .empty {
+      padding: 20px 0;
+      color: var(--muted);
+    }
+
+    .section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .section-head h2 {
+      font-size: 19px;
+    }
+
+    .pill {
+      display: inline-block;
+      padding: 3px 9px;
+      border-radius: 6px;
+      background: #fff0d4;
+      color: #775015;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .correction {
+      padding: 15px 0;
+      border-top: 1px solid var(--line);
+    }
+
+    .correction p {
+      margin-bottom: 6px;
+      font-size: 14px;
+    }
+
+    .rolls {
+      color: #234a73;
+      font-family: ui-monospace, Consolas, monospace;
+      font-size: 14px;
+      overflow-wrap: anywhere;
+    }
+
+    .correction-list {
+      max-height: 460px;
+      padding-right: 8px;
+      overflow: auto;
+    }
+
+    details {
+      margin-top: 22px;
+      padding-top: 18px;
+      border-top: 1px solid var(--line);
+    }
+
+    summary {
+      cursor: pointer;
+      font-weight: 650;
+    }
+
+    ul {
+      padding-left: 20px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    li {
+      margin-bottom: 8px;
+    }
+
+    .directory {
+      margin-top: 24px;
+    }
+
+    .directory .panel-pad {
+      padding-bottom: 12px;
+    }
+
+    .table-wrap {
+      overflow: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 14px;
+    }
+
+    th {
+      background: #edf2f8;
+      color: #415873;
+      font-size: 13px;
+    }
+
+    th,
+    td {
+      padding: 13px 20px;
+      border-top: 1px solid var(--line);
+      vertical-align: top;
+    }
+
+    td:first-child {
+      font-family: ui-monospace, Consolas, monospace;
+      white-space: nowrap;
+    }
+
+    .directory td:nth-child(2) {
+      min-width: 210px;
+    }
+
+    tbody tr:hover {
+      background: #f7faff;
+    }
+
+    .foot {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 14px;
+      margin-top: 22px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    dialog {
+      width: calc(100% - 32px);
+      max-width: 520px;
+      padding: 28px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      color: var(--ink);
+      box-shadow: 0 20px 80px #071b4a40;
+    }
+
+    dialog::backdrop {
+      background: #10243d88;
+    }
+
+    dialog .row {
+      justify-content: flex-end;
+      margin-top: 20px;
+    }
+
+    .review {
+      margin: 16px 0;
+      padding: 16px;
+      border-radius: 10px;
+      background: var(--background);
+      overflow-wrap: anywhere;
+    }
+
+    .feedback {
+      margin-top: 12px;
+      font-size: 14px;
+      white-space: pre-line;
+    }
+
+    .feedback.error {
+      color: #9d2525;
+    }
+
+    .feedback.good {
+      color: var(--green);
+    }
+
+    .small-button {
+      padding: 6px 10px;
+      border: 1px solid #c7d3e3;
+      border-radius: 7px;
+      background: white;
+      color: var(--navy);
+      font-size: 14px;
+    }
+
+    .search-bar {
+      margin: 14px 0 10px;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    [hidden] {
+      display: none !important;
+    }
+
+    @media (max-width: 800px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .intro {
+        align-items: flex-start;
+      }
+
+      .top-meta {
+        display: none;
+      }
+
+      .stats {
+        gap: 8px;
+      }
+
+      .stat {
+        display: block;
+        padding: 12px;
+      }
+
+      .stat strong {
+        font-size: 17px;
+      }
+
+      .stat .number {
+        font-size: 26px;
+      }
+
+      .panel-pad {
+        padding: 20px;
+      }
+
+      .correction-list {
+        max-height: 330px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      main {
+        padding: 20px 14px 40px;
+      }
+
+      header {
+        padding: 17px 16px;
+      }
+
+      .intro {
+        flex-wrap: wrap;
+        margin: 20px 0;
+      }
+
+      .members {
+        grid-template-columns: 1fr;
+      }
+
+      .row .btn {
+        padding: 10px 13px;
+      }
+
+      .stat span {
+        font-size: 12px;
+      }
+
+      .stats {
+        margin-bottom: 18px;
+      }
+
+      .tabs button {
+        font-size: 14px;
+      }
+
+      th,
+      td {
+        padding: 12px;
+      }
+
+      .foot {
+        font-size: 12px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="brand">
+      <div class="mark" aria-hidden="true">DB</div>
+
+      <div>
+        <strong>DBMS Topic Allocation</strong>
+        <small>Theory · Lab · Project</small>
+      </div>
+    </div>
+
+    <div class="top-meta">Class workspace / 70 students</div>
+  </header>
+
+  <main>
+    <noscript>
+      <div class="banner error">
+        Enable JavaScript to view topics and submit your allocation.
+      </div>
+    </noscript>
+
+    <div id="connection" class="banner" role="status">
+      Connecting to the class allocation sheet…
+    </div>
+
+    <div class="intro">
+      <div>
+        <h1>Choose your DBMS topic</h1>
+        <p>
+          Check your roll number, choose a category, and reserve your topic.
+        </p>
+      </div>
+
+      <span class="tag" id="openTag">Connecting…</span>
+    </div>
+
+    <div class="stats" id="stats"></div>
+
+    <div class="layout">
+      <section class="panel">
+        <div class="panel-pad">
+          <div class="identity">
+            <div class="step">01 / IDENTIFY YOURSELF</div>
+
+            <form id="identityForm">
+              <label for="roll">Your roll number</label>
+
+              <div class="row">
+                <input
+                  id="roll"
+                  type="text"
+                  placeholder="e.g. H9, 66H9 or 257R1A66H9"
+                  autocomplete="off"
+                  autocapitalize="characters"
+                  spellcheck="false"
+                  maxlength="12"
+                  aria-describedby="rollHint"
+                  required
+                >
+
+                <button id="checkButton" class="btn" type="submit" disabled>
+                  Check
+                </button>
+              </div>
+            </form>
+
+            <p class="hint" id="rollHint">
+              For students 15–22, use 16, 6616 or 267R5A6616.
+            </p>
+
+            <p id="identityFeedback" class="feedback" role="status"></p>
+          </div>
+
+          <div class="step">02 / CHOOSE YOUR CATEGORY</div>
+
+          <div class="tabs" role="tablist" aria-label="Allocation category">
+            <button
+              type="button"
+              role="tab"
+              id="tab-theory"
+              data-category="theory"
+              aria-controls="categoryPanel"
+              aria-selected="true"
+            >
+              Theory PPT
+            </button>
+
+            <button
+              type="button"
+              role="tab"
+              id="tab-lab"
+              data-category="lab"
+              aria-controls="categoryPanel"
+              aria-selected="false"
+              tabindex="-1"
+            >
+              Lab PPT
+            </button>
+
+            <button
+              type="button"
+              role="tab"
+              id="tab-project"
+              data-category="project"
+              aria-controls="categoryPanel"
+              aria-selected="false"
+              tabindex="-1"
+            >
+              Project
+            </button>
+          </div>
+
+          <div
+            id="categoryPanel"
+            role="tabpanel"
+            aria-labelledby="tab-theory"
+          ></div>
+
+          <p
+            id="formFeedback"
+            class="feedback"
+            role="status"
+            aria-live="polite"
+          ></p>
+        </div>
+      </section>
+
+      <aside class="panel">
+        <div class="panel-pad">
+          <div class="section-head">
+            <h2>Corrections required</h2>
+            <span id="correctionCount" class="pill">—</span>
+          </div>
+
+          <p class="hint" id="correctionHint"></p>
+          <div id="corrections" class="correction-list"></div>
+
+          <details>
+            <summary>Allocation rules</summary>
+
+            <ul>
+              <li>
+                One confirmed allocation per student in each category.
+              </li>
+
+              <li>
+                Theory and Lab topics are individual. Project topics belong
+                to a team.
+              </li>
+
+              <li>
+                Project teams have three members. Only one team may have four.
+              </li>
+
+              <li>
+                All students listed for a repeated topic must choose a
+                different topic.
+              </li>
+
+              <li>
+                Existing members stay together when completing an
+                incomplete team.
+              </li>
+
+              <li>
+                Confirm every roll number before submitting. Only the
+                coordinator can reopen a confirmed allocation.
+              </li>
+            </ul>
+          </details>
+        </div>
+      </aside>
+    </div>
+
+    <section class="panel directory">
+      <div class="panel-pad">
+        <div class="section-head">
+          <div>
+            <h2 id="directoryTitle">Theory allocations</h2>
+            <p class="hint">View current topics and submission status.</p>
+          </div>
+
+          <button type="button" class="small-button" id="refresh">
+            Refresh
+          </button>
+        </div>
+
+        <label for="search" class="sr-only">Search allocations</label>
+
+        <input
+          class="search-bar"
+          id="search"
+          type="search"
+          placeholder="Search roll number, topic or team…"
+        >
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead id="tableHead"></thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <div class="foot">
+      <span>DBMS · Class topic allocation</span>
+      <span id="updated">Loading records…</span>
+    </div>
+  </main>
+
+  <dialog id="confirmDialog" aria-labelledby="confirmTitle">
+    <h2 id="confirmTitle">Confirm your allocation</h2>
+
+    <p>
+      Check the topic and every roll number. A saved allocation is final
+      unless the coordinator reopens it.
+    </p>
+
+    <div id="review" class="review"></div>
+    <p id="submitFeedback" class="feedback" role="status"></p>
+
+    <div class="row">
+      <button type="button" class="btn secondary" id="cancel">
+        Go back
+      </button>
+
+      <button type="button" class="btn" id="save">
+        Confirm &amp; save
+      </button>
+    </div>
+  </dialog>
+
+  <script>
+    "use strict";
+
+    const API_URL =
+      "https://script.google.com/macros/s/AKfycbzN_R-CmNOrhY8AUM_wvqMXo_B0KW_CuxrnX3Vf1c3Y8u0RpUhw_cC4V044HZypTzoX/exec";
+
+    const CATEGORIES = ["theory", "lab", "project"];
+
+    let state = {
+      version: 0,
+      open: false,
+      topics: {
+        theory: [],
+        lab: [],
+        project: []
+      },
+      roster: [],
+      records: [],
+      fourUsed: false
+    };
+
+    let category = "theory";
+    let currentRoll = "";
+    let online = false;
+    let loaded = false;
+    let refreshing = false;
+    let busy = false;
+    let pending = null;
+
+    const $ = (id) => document.getElementById(id);
+
+    function escapeHtml(value) {
+      const characters = {
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+      };
+
+      return String(value ?? "").replace(
+        /[&<>"']/g,
+        (character) => characters[character]
+      );
+    }
+
+    function categoryLabel(value) {
+      return {
+        theory: "Theory",
+        lab: "Lab",
+        project: "Project"
+      }[value];
+    }
+
+    function normalizeRoll(value) {
+      let roll = String(value || "").trim().toUpperCase();
+
+      if (/^[A-Z][0-9]$/.test(roll)) {
+        roll = "257R1A66" + roll;
+      } else if (/^66[A-Z][0-9]$/.test(roll)) {
+        roll = "257R1A" + roll;
+      } else if (/^(1[5-9]|2[0-2])$/.test(roll)) {
+        roll = "267R5A66" + roll;
+      } else if (/^66(1[5-9]|2[0-2])$/.test(roll)) {
+        roll = "267R5A" + roll;
+      }
+
+      if (!state.roster.includes(roll)) {
+        throw new Error(
+          "Enter a valid class roll number. J2, J5 and the I-series are excluded."
+        );
+      }
+
+      return roll;
+    }
+
+    function ownRecord() {
+      return state.records.find(
+        (record) =>
+          record.category === category &&
+          record.members.includes(currentRoll)
+      );
+    }
+
+    function feedback(id, message, isError = false) {
+      $(id).textContent = message;
+      $(id).className = "feedback " + (isError ? "error" : "good");
+    }
+
+    function setConnection(message, isError = false) {
+      $("connection").hidden = !message;
+      $("connection").className = "banner" + (isError ? " error" : "");
+      $("connection").textContent = message;
+    }
+
+    function acceptState(nextState) {
+      if (
+        !nextState ||
+        !Array.isArray(nextState.roster) ||
+        !Array.isArray(nextState.records) ||
+        !CATEGORIES.every(
+          (name) => Array.isArray(nextState.topics?.[name])
+        )
+      ) {
+        throw new Error(
+          "The server returned an invalid response. Contact the coordinator."
+        );
+      }
+
+      state = nextState;
+      loaded = true;
+      online = true;
+    }
+
+    async function api(payload) {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 60000);
+
+      try {
+        const url = payload
+          ? API_URL
+          : API_URL + "?t=" + Date.now();
+
+        const options = payload
+          ? {
+              method: "POST",
+              headers: {
+                "Content-Type": "text/plain;charset=utf-8"
+              },
+              body: JSON.stringify(payload),
+              redirect: "follow",
+              signal: controller.signal
+            }
+          : {
+              method: "GET",
+              redirect: "follow",
+              cache: "no-store",
+              signal: controller.signal
+            };
+
+        const response = await fetch(url, options);
+
+        if (!response.ok) {
+          throw new Error(
+            "Connection failed. Please refresh and try again."
+          );
+        }
+
+        let data;
+
+        try {
+          data = await response.json();
+        } catch {
+          throw new Error(
+            "The server did not return allocation data. Ask the coordinator " +
+            "to check the web app deployment and access settings."
+          );
+        }
+
+        if (!data.ok) {
+          throw new Error(
+            data.error || "The request could not be completed."
+          );
+        }
+
+        return data;
+      } catch (error) {
+        if (error.name === "AbortError") {
+          throw new Error(
+            payload
+              ? "The connection timed out. Your submission may already be " +
+                "saved. Retry this same confirmation or refresh to check."
+              : "Loading timed out. Please use Refresh to try again."
+          );
+        }
+
+        if (error instanceof TypeError) {
+          throw new Error(
+            "Cannot reach the allocation sheet. Check your connection or " +
+            "ask the coordinator to check the deployment."
+          );
+        }
+
+        throw error;
+      } finally {
+        clearTimeout(timeout);
+      }
+    }
+
+    async function refresh() {
+      if (refreshing || busy) return;
+
+      refreshing = true;
+      $("refresh").disabled = true;
+      $("refresh").textContent = "Refreshing…";
+
+      try {
+        const data = await api();
+
+        acceptState(data.state);
+        setConnection("");
+
+        $("updated").textContent =
+          "Updated " +
+          new Date().toLocaleTimeString("en-IN", {
+            hour: "2-digit",
+            minute: "2-digit"
+          });
+      } catch (error) {
+        online = false;
+
+        setConnection(
+          error.message +
+            (loaded
+              ? " Displayed records may be out of date. Saving is disabled."
+              : " Records have not loaded. Saving is disabled."),
+          true
+        );
+
+        if (!loaded) {
+          $("updated").textContent = "Records unavailable";
+        }
+      } finally {
+        refreshing = false;
+        $("refresh").disabled = false;
+        $("refresh").textContent = "Refresh";
+        render();
+      }
+    }
+
+    function render() {
+      $("openTag").textContent = !loaded
+        ? refreshing
+          ? "Connecting…"
+          : "Not connected"
+        : !online
+          ? "Offline"
+          : state.open
+            ? "Submissions open"
+            : "Submissions closed";
+
+      $("checkButton").disabled = !loaded;
+
+      $("stats").innerHTML = CATEGORIES.map((name) => {
+        const count = state.records.filter(
+          (record) =>
+            record.category === name &&
+            record.status === "locked"
+        ).length;
+
+        return `
+          <div class="stat">
+            <div>
+              <strong>${categoryLabel(name)}</strong>
+              <span>
+                ${
+                  name === "project"
+                    ? "confirmed teams · 23 total"
+                    : "confirmed · 70 students"
+                }
+              </span>
+            </div>
+
+            <div class="number">${loaded ? count : "—"}</div>
+          </div>
+        `;
+      }).join("");
+
+      document.querySelectorAll("[data-category]").forEach((button) => {
+        const selected = button.dataset.category === category;
+
+        button.setAttribute("aria-selected", String(selected));
+        button.tabIndex = selected ? 0 : -1;
+      });
+
+      $("categoryPanel").setAttribute(
+        "aria-labelledby",
+        "tab-" + category
+      );
+
+      renderForm();
+      renderCorrections();
+      renderDirectory();
+    }
+
+    function renderForm() {
+      if (!loaded) {
+        $("categoryPanel").innerHTML = `
+          <p class="empty">
+            ${
+              refreshing
+                ? "Loading the class topic list…"
+                : "Connect to the allocation sheet using Refresh."
+            }
+          </p>
+        `;
+        return;
+      }
+
+      const record = ownRecord();
+      const locked = record?.status === "locked";
+
+      let html = `
+        <h2>
+          ${categoryLabel(category)}
+          ${category === "project" ? "team" : "presentation"}
+        </h2>
+      `;
+
+      if (!currentRoll) {
+        html += `
+          <div class="status">
+            Enter your roll number above to check your allocation.
+          </div>
+        `;
+      } else if (locked) {
+        html += `
+          <div class="status success">
+            <strong>
+              Confirmed
+              ${category === "project" ? " · " + escapeHtml(record.id) : ""}
+            </strong>
+
+            <br>
+            ${escapeHtml(record.topic)}
+
+            ${
+              category === "project"
+                ? "<br>" + record.members.map(escapeHtml).join(" · ")
+                : ""
+            }
+          </div>
+
+          <p class="hint">
+            Your allocation is locked. Contact the coordinator if a
+            correction is needed.
+          </p>
+        `;
+      } else if (record) {
+        const message = category === "project"
+          ? "Complete or correct your team and submit again. Keep all " +
+            "existing members. Your current project can be retained."
+          : record.original
+            ? "This topic was assigned more than once. Choose a different " +
+              "available topic."
+            : "The coordinator has reopened this allocation. Review your " +
+              "topic and submit again.";
+
+        html += `
+          <div class="status warning">
+            <strong>
+              Correction required
+              ${category === "project" ? " · " + escapeHtml(record.id) : ""}
+            </strong>
+
+            <br>
+            Current topic: ${escapeHtml(record.topic)}
+            <br>
+            ${escapeHtml(message)}
+          </div>
+        `;
+      } else {
+        html += `
+          <div class="status">
+            <strong>${escapeHtml(currentRoll)}</strong>
+            <br>
+            No ${category} allocation yet.
+          </div>
+        `;
+      }
+
+      if (!locked) {
+        if (!state.open) {
+          html += `
+            <div class="status warning">
+              Submissions are closed. Contact the coordinator.
+            </div>
+          `;
+        }
+
+        if (category === "project") {
+          const ownsFourMemberTeam = record?.members.length === 4;
+          const fourUnavailable = state.fourUsed && !ownsFourMemberTeam;
+
+          html += `
+            <p class="hint">
+              Enter all members, including yourself.
+              ${
+                fourUnavailable
+                  ? "The four-member slot is already taken."
+                  : "One team in the class may have four members."
+              }
+            </p>
+
+            <div class="field">
+              <label for="teamSize">Team size</label>
+
+              <select id="teamSize">
+                <option value="3">3 members</option>
+
+                <option
+                  value="4"
+                  ${fourUnavailable ? "disabled" : ""}
+                  ${ownsFourMemberTeam ? "selected" : ""}
+                >
+                  4 members — one team only
+                </option>
+              </select>
+            </div>
+
+            <div class="members" id="members"></div>
+          `;
+        }
+
+        html += `
+          <div class="field">
+            <label for="topicSearch">Find a topic</label>
+
+            <input
+              id="topicSearch"
+              type="search"
+              placeholder="Search the topic list…"
+            >
+          </div>
+
+          <div class="field">
+            <label for="topic">
+              ${category === "project" ? "Project title" : "Presentation topic"}
+            </label>
+
+            <select id="topic">
+              <option value="">Choose a topic</option>
+            </select>
+
+            <p id="topicCount" class="hint"></p>
+          </div>
+
+          <button
+            type="button"
+            class="btn submit"
+            id="reviewButton"
+            ${!currentRoll || !online || !state.open ? "disabled" : ""}
+          >
+            Review ${category === "project" ? "team" : "allocation"}
+          </button>
+        `;
+      }
+
+      $("categoryPanel").innerHTML = html;
+
+      if (!locked) {
+        if (category === "project") {
+          fillMembers();
+
+          $("teamSize").addEventListener("change", () => {
+            fillMembers(true);
+          });
+        }
+
+        $("topicSearch").addEventListener("input", fillTopics);
+        $("reviewButton").addEventListener("click", reviewSubmission);
+
+        fillTopics();
+      }
+    }
+
+    function fillMembers(preserve = false) {
+      const record = ownRecord();
+
+      const existing = preserve
+        ? [...document.querySelectorAll(".member")].map(
+            (input) => input.value
+          )
+        : record
+          ? record.members.slice()
+          : [currentRoll];
+
+      const teammates = existing.filter((roll) => roll !== currentRoll);
+      const size = Number($("teamSize").value);
+
+      $("members").innerHTML = Array.from(
+        { length: size },
+        (_, index) => {
+          const value = index === 0
+            ? currentRoll
+            : teammates[index - 1] || "";
+
+          return `
+            <div>
+              <label for="member${index}">
+                Member ${index + 1}${index === 0 ? " (you)" : ""}
+              </label>
+
+              <input
+                class="member"
+                id="member${index}"
+                type="text"
+                maxlength="12"
+                spellcheck="false"
+                autocomplete="off"
+                autocapitalize="characters"
+                placeholder="Roll number"
+                value="${escapeHtml(value)}"
+                ${index === 0 ? 'readonly aria-readonly="true"' : ""}
+              >
+            </div>
+          `;
+        }
+      ).join("");
+    }
+
+    function fillTopics() {
+      const select = $("topic");
+      const previous = select.value;
+      const query = $("topicSearch").value.trim().toLowerCase();
+      const record = ownRecord();
+
+      let available = 0;
+
+      select.innerHTML = '<option value="">Choose a topic</option>';
+
+      state.topics[category].forEach((topic) => {
+        const original = Boolean(record && record.original === topic);
+
+        const taken = state.records.some(
+          (other) =>
+            other.category === category &&
+            other.topic === topic &&
+            other.id !== record?.id
+        );
+
+        if (!original && !taken) available++;
+
+        if (!topic.toLowerCase().includes(query)) return;
+
+        const option = document.createElement("option");
+
+        option.value = topic;
+        option.textContent =
+          topic +
+          (original
+            ? " — choose a different topic"
+            : taken
+              ? " — taken"
+              : "");
+
+        option.disabled = original || taken;
+        select.appendChild(option);
+      });
+
+      const canRestoreSelection = [...select.options].some(
+        (option) => option.value === previous && !option.disabled
+      );
+
+      if (canRestoreSelection) {
+        select.value = previous;
+      }
+
+      $("topicCount").textContent =
+        available + " available topics · taken topics are disabled";
+    }
+
+    function createRequestId() {
+      if (typeof crypto.randomUUID === "function") {
+        return crypto.randomUUID();
+      }
+
+      const bytes = new Uint8Array(16);
+      crypto.getRandomValues(bytes);
+
+      return Array.from(
+        bytes,
+        (byte) => byte.toString(16).padStart(2, "0")
+      ).join("");
+    }
+
+    function reviewSubmission() {
+      try {
+        if (!online || !state.open || !currentRoll) {
+          throw new Error(
+            "Check your roll number and connection before submitting."
+          );
+        }
+
+        const topic = $("topic").value;
+
+        if (!topic) {
+          throw new Error("Select an available topic first.");
+        }
+
+        const record = ownRecord();
+        let members = [currentRoll];
+
+        if (category === "project") {
+          members = [...document.querySelectorAll(".member")].map(
+            (input) => normalizeRoll(input.value)
+          );
+
+          if (![3, 4].includes(members.length)) {
+            throw new Error("A project team must have three or four members.");
+          }
+
+          if (new Set(members).size !== members.length) {
+            throw new Error(
+              "Enter a different roll number for every teammate."
+            );
+          }
+
+          if (!members.includes(currentRoll)) {
+            throw new Error("Your own roll number must be in the team.");
+          }
+
+          if (
+            record &&
+            record.members.some((roll) => !members.includes(roll))
+          ) {
+            throw new Error(
+              "Keep the existing members: " + record.members.join(", ")
+            );
+          }
+
+          for (const roll of members) {
+            const otherTeam = state.records.find(
+              (other) =>
+                other.category === "project" &&
+                other.members.includes(roll) &&
+                other.id !== record?.id
+            );
+
+            if (otherTeam) {
+              throw new Error(
+                roll + " already belongs to " + otherTeam.id + "."
+              );
+            }
+          }
+
+          if (
+            members.length === 4 &&
+            state.records.some(
+              (other) =>
+                other.category === "project" &&
+                other.members.length === 4 &&
+                other.id !== record?.id
+            )
+          ) {
+            throw new Error(
+              "The four-member team slot has already been used."
+            );
+          }
+        }
+
+        pending = {
+          category,
+          roll: currentRoll,
+          members,
+          topic,
+          requestId: createRequestId()
+        };
+
+        $("review").innerHTML = `
+          <strong>${categoryLabel(category)}</strong>
+          <p>${escapeHtml(topic)}</p>
+
+          <div class="rolls">
+            ${members.map(escapeHtml).join("<br>")}
+          </div>
+        `;
+
+        feedback("formFeedback", "");
+        feedback("submitFeedback", "");
+
+        $("save").textContent = "Confirm & save";
+        $("confirmDialog").showModal();
+      } catch (error) {
+        feedback("formFeedback", error.message, true);
+      }
+    }
+
+    async function save() {
+      if (busy || !pending) return;
+
+      busy = true;
+      $("save").disabled = true;
+      $("cancel").disabled = true;
+      $("save").textContent = "Saving…";
+
+      feedback("submitFeedback", "Please wait for confirmation.");
+
+      try {
+        const data = await api(pending);
+
+        acceptState(data.state);
+        setConnection("");
+
+        pending = null;
+
+        $("confirmDialog").close();
+        render();
+
+        feedback(
+          "formFeedback",
+          data.message + (data.warning ? "\n" + data.warning : "")
+        );
+
+        $("updated").textContent =
+          "Saved " + new Date().toLocaleTimeString("en-IN");
+      } catch (error) {
+        feedback("submitFeedback", error.message, true);
+        $("save").textContent = "Retry confirmation";
+      } finally {
+        busy = false;
+        $("save").disabled = false;
+        $("cancel").disabled = false;
+      }
+    }
+
+    function renderCorrections() {
+      if (!loaded) {
+        $("correctionCount").textContent = "—";
+        $("correctionHint").textContent = "";
+        $("corrections").innerHTML =
+          '<p class="empty">Load the records to view corrections.</p>';
+        return;
+      }
+
+      const records = state.records.filter(
+        (record) =>
+          record.category === category &&
+          record.status === "correction"
+      );
+
+      const unit = category === "project"
+        ? records.length === 1 ? "team" : "teams"
+        : records.length === 1 ? "student" : "students";
+
+      $("correctionCount").textContent = records.length + " " + unit;
+
+      $("correctionHint").textContent = category === "project"
+        ? "The members below must review their team and resubmit."
+        : "Students with repeated topics must choose a different topic.";
+
+      const groups = new Map();
+
+      records.forEach((record) => {
+        const key = category === "project" ? record.id : record.topic;
+
+        if (!groups.has(key)) {
+          groups.set(key, {
+            topic: record.topic,
+            members: [],
+            id: record.id
+          });
+        }
+
+        groups.get(key).members.push(...record.members);
+      });
+
+      if (!groups.size) {
+        $("corrections").innerHTML = `
+          <p class="empty">
+            No corrections pending in ${categoryLabel(category)}.
+          </p>
+        `;
+        return;
+      }
+
+      $("corrections").innerHTML = [...groups.values()].map((group) => {
+        const projectHint = category === "project"
+          ? group.members.length < 3
+            ? `${group.members.length} known members · add the missing member(s)`
+            : `${group.members.length} members · review and resubmit`
+          : "";
+
+        return `
+          <div class="correction">
+            <p>
+              <strong>
+                ${
+                  category === "project"
+                    ? escapeHtml(group.id) + " · "
+                    : ""
+                }
+                ${escapeHtml(group.topic)}
+              </strong>
+            </p>
+
+            <div class="rolls">
+              ${group.members.map(escapeHtml).join("<br>")}
+            </div>
+
+            ${
+              projectHint
+                ? '<p class="hint">' + escapeHtml(projectHint) + "</p>"
+                : ""
+            }
+          </div>
+        `;
+      }).join("");
+    }
+
+    function renderDirectory() {
+      const query = $("search").value.trim().toLowerCase();
+      const isProject = category === "project";
+
+      $("directoryTitle").textContent =
+        categoryLabel(category) + " allocations";
+
+      $("tableHead").innerHTML = isProject
+        ? `
+          <tr>
+            <th scope="col">Team / members</th>
+            <th scope="col">Project title</th>
+            <th scope="col">Status</th>
+          </tr>
+        `
+        : `
+          <tr>
+            <th scope="col">Roll number</th>
+            <th scope="col">Topic</th>
+            <th scope="col">Status</th>
+          </tr>
+        `;
+
+      if (!loaded) {
+        $("tableBody").innerHTML = `
+          <tr>
+            <td colspan="3">Allocation records have not loaded yet.</td>
+          </tr>
+        `;
+        return;
+      }
+
+      let rows = [];
+
+      if (isProject) {
+        const teams = state.records
+          .filter((record) => record.category === "project")
+          .sort(
+            (first, second) =>
+              Number(first.id.slice(1)) - Number(second.id.slice(1))
+          );
+
+        rows = teams.map((record) => [
+          record.id + "\n" + record.members.join("\n"),
+          record.topic,
+          record.status === "correction"
+            ? "Correction required"
+            : "Confirmed"
+        ]);
+
+        const unassigned = state.roster.filter(
+          (roll) => !teams.some((team) => team.members.includes(roll))
+        );
+
+        rows.push(
+          ...unassigned.map((roll) => [
+            roll,
+            "Not yet in a project team",
+            "Not submitted"
+          ])
+        );
+      } else {
+        rows = state.roster.map((roll) => {
+          const record = state.records.find(
+            (item) =>
+              item.category === category &&
+              item.members.includes(roll)
+          );
+
+          return [
+            roll,
+            record ? record.topic : "—",
+            record
+              ? record.status === "correction"
+                ? "Correction required"
+                : "Confirmed"
+              : "Not submitted"
+          ];
+        });
+      }
+
+      rows = rows.filter(
+        (row) => row.join(" ").toLowerCase().includes(query)
+      );
+
+      $("tableBody").innerHTML = rows.length
+        ? rows.map((row) => `
+            <tr>
+              <td>${escapeHtml(row[0]).replace(/\n/g, "<br>")}</td>
+              <td>${escapeHtml(row[1])}</td>
+              <td>
+                ${
+                  row[2] === "Correction required"
+                    ? '<span class="pill">Correction required</span>'
+                    : escapeHtml(row[2])
+                }
+              </td>
+            </tr>
+          `).join("")
+        : `
+          <tr>
+            <td colspan="3">No matching records.</td>
+          </tr>
+        `;
+    }
+
+    $("identityForm").addEventListener("submit", (event) => {
+      event.preventDefault();
+
+      try {
+        if (!loaded) {
+          throw new Error("Wait for the class records to load first.");
+        }
+
+        currentRoll = normalizeRoll($("roll").value);
+        $("roll").value = currentRoll;
+
+        feedback("identityFeedback", "Recognized: " + currentRoll);
+        feedback("formFeedback", "");
+
+        renderForm();
+      } catch (error) {
+        currentRoll = "";
+        feedback("identityFeedback", error.message, true);
+        renderForm();
+      }
+    });
+
+    $("roll").addEventListener("input", () => {
+      if (!currentRoll) return;
+
+      currentRoll = "";
+      feedback("identityFeedback", "Check your roll number to continue.");
+      feedback("formFeedback", "");
+      renderForm();
+    });
+
+    document.querySelectorAll("[data-category]").forEach((button) => {
+      button.addEventListener("click", () => {
+        category = button.dataset.category;
+        feedback("formFeedback", "");
+        render();
+      });
+
+      button.addEventListener("keydown", (event) => {
+        if (
+          !["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)
+        ) {
+          return;
+        }
+
+        event.preventDefault();
+
+        const index = CATEGORIES.indexOf(category);
+
+        const nextIndex = event.key === "Home"
+          ? 0
+          : event.key === "End"
+            ? 2
+            : (index + (event.key === "ArrowRight" ? 1 : 2)) % 3;
+
+        const nextTab = $("tab-" + CATEGORIES[nextIndex]);
+
+        nextTab.click();
+        nextTab.focus();
+      });
+    });
+
+    $("search").addEventListener("input", renderDirectory);
+    $("refresh").addEventListener("click", refresh);
+    $("save").addEventListener("click", save);
+
+    $("cancel").addEventListener("click", () => {
+      if (!busy) {
+        $("confirmDialog").close();
+      }
+    });
+
+    $("confirmDialog").addEventListener("cancel", (event) => {
+      if (busy) {
+        event.preventDefault();
+      }
+    });
+
+    render();
+    refresh();
+  </script>
+</body>
+</html>
