@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<!-- Publish DBMS allocation website -->
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -863,7 +862,7 @@
     "use strict";
 
     const API_URL =
-      "https://script.google.com/macros/s/AKfycbzN_R-CmNOrhY8AUM_wvqMXo_B0KW_CuxrnX3Vf1c3Y8u0RpUhw_cC4V044HZypTzoX/exec";
+      "https://script.google.com/macros/s/AKfycbyhg8HAexmyKYBPX_kvvVW52T8b68C3ZsUsk_HdF6XRmcdARhFBWm2F7Myo100zKJkl/exec";
 
     const CATEGORIES = ["theory", "lab", "project"];
 
@@ -1198,24 +1197,26 @@
           </p>
         `;
       } else if (record) {
-        const message = category === "project"
-          ? "Complete or correct your team and submit again. Keep all " +
-            "existing members. Your current project can be retained."
-          : record.original
-            ? "This topic was assigned more than once. Choose a different " +
-              "available topic."
-            : "The coordinator has reopened this allocation. Review your " +
-              "topic and submit again.";
+        const reopened = record.status === "reopened";
+
+        const message = reopened
+          ? category === "project"
+            ? "Your team is still reserved. Select an available project topic and submit again."
+            : "This allocation was reopened by the coordinator. Choose any available topic and submit again."
+          : category === "project"
+            ? "Complete or correct your team and submit again. Keep all existing members. Your current project can be retained."
+            : record.original
+              ? "This topic was assigned more than once. Choose a different available topic."
+              : "Review your allocation and submit again.";
 
         html += `
           <div class="status warning">
             <strong>
-              Correction required
+              ${reopened ? "Allocation reopened" : "Correction required"}
               ${category === "project" ? " · " + escapeHtml(record.id) : ""}
             </strong>
 
-            <br>
-            Current topic: ${escapeHtml(record.topic)}
+            ${record.topic ? `<br>Current topic: ${escapeHtml(record.topic)}` : ""}
             <br>
             ${escapeHtml(message)}
           </div>
@@ -1706,7 +1707,9 @@
           record.topic,
           record.status === "correction"
             ? "Correction required"
-            : "Confirmed"
+            : record.status === "reopened"
+              ? "Reopened"
+              : "Confirmed"
         ]);
 
         const unassigned = state.roster.filter(
@@ -1734,7 +1737,9 @@
             record
               ? record.status === "correction"
                 ? "Correction required"
-                : "Confirmed"
+                : record.status === "reopened"
+                  ? "Reopened"
+                  : "Confirmed"
               : "Not submitted"
           ];
         });
@@ -1751,8 +1756,8 @@
               <td>${escapeHtml(row[1])}</td>
               <td>
                 ${
-                  row[2] === "Correction required"
-                    ? '<span class="pill">Correction required</span>'
+                  row[2] === "Correction required" || row[2] === "Reopened"
+                    ? '<span class="pill">' + escapeHtml(row[2]) + '</span>'
                     : escapeHtml(row[2])
                 }
               </td>
